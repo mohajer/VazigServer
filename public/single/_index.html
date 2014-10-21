@@ -1,0 +1,28 @@
+<!doctype html>
+<html ng-app="hangMan">
+  <head>
+    <title>Raw Game - v 0.0.1</title>    
+     <script src="../socket.io/socket.io.js"></script>
+     <script>
+  var socket = io.connect();
+  </script>      
+    <script src="../jquery.js"></script>      
+    <script src="../angular.min.js"></script>      
+    <script src="../angular-route.min.js"></script>      
+    <script src="../app.js"></script> 
+  </head>  
+  <body ng-controller="mainCtr">
+    
+	<h1>VaziG</h1>
+  <button id="register" ng-click="register()">Register</button>
+  <button id="play" ng-click="play()">play</button>
+ <div id="status" style="background-color:red;"></div> 
+ <div id="client-id" style="background-color:black;color:#fff"></div>
+ <div id="play-ground">
+   {{element}}
+ </div>
+	
+        
+  </body>
+</html>
+

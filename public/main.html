@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Raw Game - v 0.0.1</title>
+    <script src="/json.js"></script> <!-- for ie -->
+    <script src="/knockout-latest.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+    <script src="/jquery.js"></script>
+    <script src="/script.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+  </head>
+  <body>
+    
+	
+	<div id="find_game" class="mg_btn" data-bind="visible: $root.game.status() == 0,click: $root.game.search">Find Game</div>
+	<div id="find_game_load"  data-bind="visible: $root.game.status() == 1">Searching for Opponent</div>
+	<div id="score_board" data-bind="visible : $root.game.status() == 2">
+	
+	My Id :<span data-bind="html:$root.game.id()"></span>
+	<br/>
+	Game ID :<span data-bind="html:$root.game.match_id()"></span>
+	<br/>
+	Opponent ID :<span data-bind="html:$root.game.opponent_id()"></span>
+	<br/>
+	Time:<span data-bind="html:$root.game.second()"></span>
+	
+	</div>
+    <div id="board" data-bind="foreach: Board,visible : $root.game.status() == 2">
+		<div class="cell"  data-bind="html: number,style:{backgroundColor:color}"></div>
+	</div>
+	<div id="endGame" data-bind="visible : $root.game.status() == 3,html:$root.result()">
+	
+	</div>
+      
+    </body>
+</html>
+

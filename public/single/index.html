@@ -1,0 +1,89 @@
+<!doctype html>
+<html ng-app="hangMan">
+  <head>
+    <title>Raw Game - v 0.0.1</title>
+    <script src="../socket.io/socket.io.js"></script>
+	<script>var socket = io.connect();</script>
+    <script src="../jquery.js"></script>
+	<script src="../angular.min.js"></script>
+	<script src="../angular-route.min.js"></script>
+	<script src="../app.js"></script>
+	
+	<style>
+		body{
+			background-color : #f5fafd;
+		}
+	</style>
+  </head>
+  <script>
+  //var socket = io.connect();
+  
+  /*jQuery(document).ready(function($) {
+    $('#play').live('click', function() {  
+    socket.emit('play',{"method":"init"});     
+    });
+  });
+  
+  
+   
+socket.on('sr_play', function (data) {  
+console.log(data.wordc)  
+    $('#play').remove();
+    var str="";
+    for (var i = 0; i <data.wordc; i++) {
+      str +="<input type='text' maxlength='1' size='2' class='hang-inp' style='background-color:black;color:#fff'>";
+    };
+    $('#play-ground').append(str+"<br /><button id ='guess'>guess</button>")
+  });
+$("#guess").live("click",function(){
+  var tmp = {};
+  $.each($('.hang-inp'), function(index, val) {
+     
+     tmp[index] = val.value;
+  });
+  console.log(tmp)
+  socket.emit('play',{"method":"guess","param":tmp });
+
+})
+socket.on('sr_guess', function (data) {  
+  console.log(data)
+  var correctCount=0,wrongCount=0;
+  if(data.try_num>5){
+    alert("U lose");
+    return false;
+  }else{
+    $.each(data.result, function(index, val) {
+       if(val == 1)
+        correctCount ++;
+      else
+        wrongCount++;
+    });
+    if(correctCount == data.wordc)
+    {
+      alert("U done it!")
+      return false;
+    }else{
+      alert("correct word count :"+correctCount+" and wrong word count :"+wrongCount)
+    }
+  }
+
+})*/
+  </script>
+  <body ng-controller="mainCtr">
+    
+	<h1>VaziG</h1>
+  <button id="register" ng-click="register()">Register</button>
+  <button id="play" ng-click="play()">play</button>
+<div id="status" style="background-color:red;">
+  <p>{{connect}}</p>
+</div> 
+ <div id="client-id"  style="background-color:black;color:#fff" >
+ <p>{{client}}</p></div>
+ <div id="play-ground">
+ {{input}}
+ </div>
+	
+      
+  </body>
+</html>
+

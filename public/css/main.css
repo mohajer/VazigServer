@@ -1,0 +1,59 @@
+*
+{
+padding:0px;
+margin:0px;
+}
+
+body
+{
+text-align:center;
+background-color:#0098d7;
+}
+#board
+{
+width:422px;
+height:422px;
+background-color:white;
+border:1px solid #ccc;
+display:inline-block;
+margin-top:100px;
+}
+.cell
+{
+width:140px;
+height:140px;
+display:inline-block;
+float:right;
+}
+.midcell
+{
+border:1px solid #ccc;
+}
+.mg_btn
+{
+height:15x;
+padding:12px 10px;
+display:inline-block;
+font-weight:bold;
+font-size:14px;
+margin:20px 0px;
+border:1px solid black;
+background-color:#bbb;
+cursor:pointer;
+}
+.mg_btn:hover
+{
+background-color:#fff;
+}
+#endGame
+{
+font-size:30px;
+}
+.mouse_status
+{
+width:20px;
+height:20px;
+background-color:yellow;
+position:absolute;
+z-index:100;
+}
