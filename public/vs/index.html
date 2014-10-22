@@ -7,76 +7,69 @@
   </head>
   <script>
   var socket = io.connect();
-  var clientId;
-  var registerData = {
-    "game" : "hangMan"
-  };
+  var clientId,
+  qnum=1,count=0;
+  var registerData = {"game" : "zarb"};
   jQuery(document).ready(function($) {
     $('#register').live('click', function() {  
-    socket.emit('register',registerData);     
-    });
-    $('#play').live('click', function() {  
-    socket.emit('play',{"method":"init"});     
+    socket.emit('register',registerData);   
+    $("#client-id").text("waiting");  
     });
   });
   
   socket.on('sr_connect', function (data) {
     $("#status").text("U Are connect !")
   }); 
-  socket.on('sr_register', function (data) {
-    $("#client-id").text("U client id is :"+data);
+  socket.on('sr_register', function (data) { 
+  	clientId = data;
+  	$("#me p").text(data)
     $('#register').remove();
-  }); 
-socket.on('sr_play', function (data) {  
-console.log(data.wordc)  
-    $('#play').remove();
-    var str="";
-    for (var i = 0; i <data.wordc; i++) {
-      str +="<input type='text' maxlength='1' size='2' class='hang-inp' style='background-color:black;color:#fff'>";
-    };
-    $('#play-ground').append(str+"<br /><button id ='guess'>guess</button>")
   });
-$("#guess").live("click",function(){
-  var tmp = {};
-  $.each($('.hang-inp'), function(index, val) {
-     
-     tmp[index] = val.value;
-  });
-  console.log(tmp)
-  socket.emit('play',{"method":"guess","param":tmp });
+socket.on('sr_match', function (data) {    
+	$("#my-friend p").text("connect");
+	socket.emit('play',{"method":"get","param":{"clientId":""+clientId+"","qnum":qnum}});
 
-})
-socket.on('sr_guess', function (data) {  
-  console.log(data)
-  var correctCount=0,wrongCount=0;
-  if(data.try_num>5){
-    alert("U lose");
-    return false;
-  }else{
-    $.each(data.result, function(index, val) {
-       if(val == 1)
-        correctCount ++;
-      else
-        wrongCount++;
-    });
-    if(correctCount == data.wordc)
-    {
-      alert("U done it!")
-      return false;
-    }else{
-      alert("correct word count :"+correctCount+" and wrong word count :"+wrongCount)
-    }
-  }
+}); 
 
+socket.on('sr_question', function (data) { 
+	qnum = data.qnum;
+	$("#me span").text(data.num1+" * "+data.num2);
+	setInterval(function(){socket.emit('play',{"method":"result","param":{"clientId":""+clientId+""}})},1000)
+ });
+
+$("#me input").live('blur',function(){
+	socket.emit('play',{"method":"ans","param":{"clientId":""+clientId+"","qnum":qnum}});
+	if(qnum <=4)
+		socket.emit('play',{"method":"get","param":{"clientId":""+clientId+"","qnum":++qnum}});	
+		
 })
+
+socket.on('sr_result', function (data) { 
+	console.log(data)
+	$("#time").text(data.time1)
+	$("#my-score").text(data.opp)
+	$("#my-f-score").text(data.you)
+})
+
   </script>
   <body>
     
 	<h1>VaziG</h1>
-  <button id="register">Register</button>
-  <button id="play">play</button>
- <div id="status" style="background-color:red;"></div> 
- <div id="client-id" style="background-color:black;color:#fff"></div>
+  <button id="register">Register</button>  
+<div id="my-score"></div>
+<div id="time"></div>
+<div id="my-f-score"></div>
+ <div id="me" style="background-color:red;height:200px;width:200px;float:left;clear:both">
+ 	<p></p>
+ 	<span></span>
+ 	<input type="text">
+
+ </div> 
+ <div id="my-friend" style="background-color:black;color:#fff;height:200px;width:200px;float:right">
+ 	<p></p>
+ 	<span></span>
+ 	<input type="text" >
+ </div>
  <div id="play-ground"></div>
 	
       

@@ -35,12 +35,12 @@ app.controller('mainCtr', ['$scope', function($scope){
 	socket.on('sr_play', function (data) {  
 	/*console.log(data.wordc) 
     $('#play').remove();*/
-    // alert("zahra");
-    for ($i = 0; $i <data.wordc; $i++) {
-     $scope.str += "<input type='text' maxlength='1' size='2' class='hang-inp' style='background-color:black;color:#fff' />"
-	 /*<input type='text' maxlength='1' size='2' class='hang-inp' style='background-color:black;color:#fff'>*/
-    };
-  //  $scope.input.push(str+"<br /><button id ='guess'>guess</button>");
+		$scope.arr = [];
+		$scope.flag=false;
+        for ($i = 0; $i <data.wordc; $i++) {
+				$scope.arr.push(i);
+		};
+	$scope.flag=true;
   });
   socket.emit('play',{"method":"init"}); 
  	}

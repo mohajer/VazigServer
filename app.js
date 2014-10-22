@@ -29,57 +29,14 @@ function Player(socket,id,status,gname)
 	self.game = gname;
 }
 
-//Match Class
-function Match(id,team1,team2)
-{
-	var self = this;
-	self.id = id;
-	var d = new Date();
-	var n = d.getTime(); 	
-	self.time = n;
-	self.mouse1 = {};
-	self.mouse2 = {};
-	self.second = 100;
-	self.player1 = team1;
-	self.player2 = team2;
-	self.p1Point = 0;
-	self.p2Point = 0;
-	self.data = [0,0,0,0,0,0,0,0,0];
-	self.winner = 0;
-	self.isFinished = function()
-	{
-		for(var i = 0 ; i < 9;i++)
-		{
-			if( self.data[i] == 1 )
-				self.p1Point++;
-			else if(self.data[i] == 2)
-				self.p2Point++;
-		}
-		var d = new Date();
-		var n = d.getTime(); 
-		self.second = Math.round(10 - ( n - self.time )/100);
-		
-		if( self.second < 0)
-		{
-			if( self.p1Point > self.p2Point)
-				self.winner = 1;
-			else if( self.p2Point > self.p1Point)
-				self.winner = 2;
-			else
-				self.winner = 3;
-			return true;
-			
-		}
-	}
 
-}
 
 //World Model Class
 function WorldModel()
 {
 	var self = this;
 	self.all_player = [];
-	self.all_match = [];
+	
 	self.findPlayerById =function(id)
 	{
 		for(var i = 0 ; i < self.all_player.length;i++)
@@ -89,15 +46,7 @@ function WorldModel()
 		}
 
 	}
-	self.findMatchById = function(id) 
-	{
-		for(var i = 0 ; i < self.all_match.length;i++)
-		{
-			if( self.all_match[i].id == id)
-				return self.all_match[i];
-		}
 
-	}
 }
 
 		
@@ -111,14 +60,45 @@ io.sockets.on('connection', function (socket) {
   //New Client Want to start a game
 	socket.on('register', function (data) {
 		console.log("new Client Registered!");
-		
-		
-		var gameImp = require('./'+data.game+'.js');
-		var game = new gameImp;
-		game.setSocket(socket);
-		wm.all_player.push(new Player(socket,socket.id,1,game));
+		var player_num = 2;
 		
 		socket.emit('sr_register',socket.id);
+		match_counter++;
+		
+		if( player_num == 1) // One player game
+		{
+			var gameImp = require('./'+data.game+'.js');
+			var game = new gameImp;
+			wm.all_player.push(new Player(socket,socket.id,1,game));
+			game.setSocket(socket);
+		}
+		else
+		{
+
+			wm.all_player.push(new Player(socket,socket.id,1,null));
+			
+			for(var i = 0 ; i < wm.all_player.length;i++)//Search for opponent
+			{
+				if(wm.all_player[i].status == 1 && wm.all_player[i].id != socket.id)
+				{
+					var gameImp = require('./'+data.game+'.js');
+					var game = new gameImp;
+					wm.all_player[i].game = game;
+					wm.findPlayerById(socket.id).game = game;
+				
+					socket.join("match" + match_counter); //Join cur user to group match 
+					wm.all_player[i].socket.join("match" + match_counter); //Join Other user to group match	
+					
+					game.setSocket(socket.id, wm.all_player[i].socket.id, socket ,wm.all_player[i].socket);
+					io.sockets.in("match" + match_counter).emit('sr_match');
+					wm.all_player[i].status = 2;
+					wm.findPlayerById(socket.id).status = 2;
+				}
+		}
+		
+		}
+		
+		
 		
 		
 		

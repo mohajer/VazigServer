@@ -74,13 +74,14 @@ socket.on('sr_guess', function (data) {
 	<h1>VaziG</h1>
   <button id="register" ng-click="register()">Register</button>
   <button id="play" ng-click="play()">play</button>
+  <input type="text" ng-repeat="o in arr" />
+ <input type="button" ng-show="guass" />
 <div id="status" style="background-color:red;">
   <p>{{connect}}</p>
 </div> 
  <div id="client-id"  style="background-color:black;color:#fff" >
  <p>{{client}}</p></div>
  <div id="play-ground">
- {{input}}
  </div>
 	
       
